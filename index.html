@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>History Map - Ana lava el plato</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Focus styles for strict WCAG 2.4.13 compliance */
+    :focus-visible {
+      outline: 4px solid #0284C7 !important;
+      outline-offset: 3px !important;
+      box-shadow: 0 0 0 6px rgba(2, 132, 199, 0.3) !important;
+    }
+
+    /* Font readability adaptations for Dyslexia/Cognitive load */
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      line-height: 1.6;
+      letter-spacing: 0.02em;
+      background-color: #F8FAFC;
+      color: #0F172A;
+    }
+
+    /* Minimum Target Size Guarantee (Criterion 2.5.8) */
+    .touch-target {
+      min-width: 44px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Custom high-contrast borders and active states */
+    .slot-highlight {
+      animation: pulse-yellow 1.5s infinite;
+    }
+
+    @keyframes pulse-yellow {
+      0%, 100% {
+        border-color: #EAB308;
+        box-shadow: 0 0 0 4px rgba(234, 179, 8, 0.4);
+      }
+      50% {
+        border-color: #CA8A04;
+        box-shadow: 0 0 0 8px rgba(234, 179, 8, 0.6);
+      }
+    }
+
+    .card-selected {
+      border-color: #2563EB !important;
+      background-color: #EFF6FF !important;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.3) !important;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-50 text-slate-900 antialiased p-2 sm:p-4 md:p-6">
+
+  <!-- ACCESSIBLE HEADER -->
+  <header class="w-full max-w-7xl mx-auto mb-4 bg-white p-4 rounded-xl shadow-sm border-2 border-slate-200 flex flex-wrap items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl" aria-hidden="true">
+        📖
+      </div>
+      <div>
+        <h1 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">History Map: Ana lava el plato</h1>
+        <p class="text-sm font-medium text-slate-600">Actividad adaptada de comprensión lectora (Ritmo libre, sin tiempo)</p>
+      </div>
+    </div>
+
+    <!-- MAIN CONTROL BUTTONS -->
+    <div class="flex items-center gap-3">
+      <button id="btn-audio-story" onclick="readFullStory()" class="touch-target px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-800 font-semibold rounded-lg border-2 border-blue-300 flex items-center gap-2 transition-colors">
+        <span aria-hidden="true">🔊</span>
+        <span>Escuchar Historia</span>
+      </button>
+      <button id="btn-reset" onclick="resetActivity()" class="touch-target px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-semibold rounded-lg border-2 border-slate-300 flex items-center gap-2 transition-colors">
+        <span aria-hidden="true">🔄</span>
+        <span>Reiniciar</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN WORKSPACE: SIDE-BY-SIDE LAYOUT (Spacial Contiguity Principle) -->
+  <main class="w-full max-w-7xl mx-auto flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+    <!-- LEFT PANEL: ADAPTED TEXT & CARD BANK (4 Columns on LG) -->
+    <section class="lg:col-span-4 flex flex-col gap-4" aria-labelledby="story-heading">
+      
+      <!-- ADAPTED STORY DISPLAY (Mayer Signaling & UDL Representation) -->
+      <div class="bg-white p-5 rounded-xl border-2 border-slate-200 shadow-sm">
+        <div class="flex items-center justify-between mb-3 border-b-2 border-slate-100 pb-2">
+          <h2 id="story-heading" class="text-lg font-bold text-slate-800 flex items-center gap-2">
+            <span>📄</span> Cuento Adaptado
+          </h2>
+          <span class="text-xs bg-slate-100 text-slate-700 px-2 py-1 rounded font-semibold">Voz Activa</span>
+        </div>
+        <div id="story-text-container" class="space-y-2 text-base text-slate-800 font-medium">
+          <p id="p-main" class="p-2 rounded transition-colors hover:bg-blue-50">Ana limpia el plato después de comer.</p>
+          <p id="p-step1" class="p-2 rounded transition-colors hover:bg-blue-50"><strong class="text-blue-700">Primero:</strong> Ana lleva el plato hacia el fregadero de la cocina.</p>
+          <p id="p-step2" class="p-2 rounded transition-colors hover:bg-blue-50"><strong class="text-blue-700">Segundo:</strong> Ana pone jabón líquido sobre la esponja amarilla.</p>
+          <p id="p-step3" class="p-2 rounded transition-colors hover:bg-blue-50"><strong class="text-blue-700">Tercero:</strong> Ana frota la esponja sobre el plato sucio.</p>
+          <p id="p-result" class="p-2 rounded transition-colors hover:bg-blue-50"><strong class="text-emerald-700">Resultado:</strong> El plato está limpio y Ana guarda el plato.</p>
+        </div>
+      </div>
+
+      <!-- CARDS BANK (Mayer & WCAG Accessible) -->
+      <div class="bg-white p-5 rounded-xl border-2 border-slate-200 shadow-sm flex-1">
+        <div class="flex items-center justify-between mb-3 border-b-2 border-slate-100 pb-2">
+          <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+            <span>🧩</span> Tarjetas Disponibles
+          </h2>
+          <span id="cards-counter" class="text-xs bg-blue-100 text-blue-800 font-bold px-2 py-1 rounded">9 restantes</span>
+        </div>
+        <p class="text-xs text-slate-600 mb-3" id="instructions-bank">
+          Pulsa una tarjeta para seleccionarla y luego pulsa en su casillero correspondiente, o arrástrala directo al tablero.
+        </p>
+
+        <!-- DRAGGABLE / CLICKABLE CARDS -->
+        <div id="cards-bank" class="space-y-2 max-h-[500px] overflow-y-auto p-1" role="region" aria-live="polite" aria-label="Banco de tarjetas">
+          <!-- Cards injected dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT PANEL: 9-SLOT HISTORY MAP (8 Columns on LG) -->
+    <section class="lg:col-span-8 bg-white p-5 rounded-xl border-2 border-slate-200 shadow-sm flex flex-col h-full" aria-labelledby="board-heading">
+      <div class="flex items-center justify-between mb-4 border-b-2 border-slate-100 pb-2">
+        <h2 id="board-heading" class="text-lg font-bold text-slate-800 flex items-center gap-2">
+          <span>🗺️</span> Tablero History Map (9 Casilleros)
+        </h2>
+        <span class="text-xs bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded">Progreso: <span id="progress-text">0/9</span></span>
+      </div>
+
+      <!-- 9 SLOTS GRID -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 flex-1" id="history-map-grid">
+        <!-- 9 slots generated via JavaScript for consistency -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ACCESSIBLE STATUS FEEDBACK / ANNOUNCER (WCAG Screen Reader Support) -->
+  <div id="screen-reader-announcer" class="sr-only" aria-live="assertive" aria-atomic="true"></div>
+
+  <!-- COMPLETION MODAL / SUMMARY PANEL -->
+  <div id="modal-summary" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50" role="dialog" aria-labelledby="modal-title" aria-modal="true">
+    <div class="bg-white max-w-lg w-full rounded-2xl border-4 border-emerald-500 shadow-2xl p-6 text-center space-y-4">
+      <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-3xl mx-auto" aria-hidden="true">
+        🎉
+      </div>
+      <h2 id="modal-title" class="text-2xl font-bold text-slate-900">¡Excelente Trabajo!</h2>
+      <p class="text-slate-600 font-medium">Has completado todo el History Map de "Ana lava el plato".</p>
+      
+      <!-- STATS BREAKDOWN -->
+      <div class="bg-slate-50 p-4 rounded-xl border-2 border-slate-200 text-left space-y-2">
+        <p class="font-bold text-slate-800 border-b border-slate-200 pb-1">Resumen de Logros:</p>
+        <div class="flex justify-between text-sm py-1">
+          <span class="text-slate-600 flex items-center gap-1"><span class="text-emerald-600 font-bold">✓</span> Respuestas Independientes:</span>
+          <span id="stat-independent" class="font-bold text-emerald-700">0</span>
+        </div>
+        <div class="flex justify-between text-sm py-1">
+          <span class="text-slate-600 flex items-center gap-1"><span class="text-amber-600 font-bold">💡</span> Respuestas con Pista/Ayuda:</span>
+          <span id="stat-assisted" class="font-bold text-amber-700">0</span>
+        </div>
+      </div>
+
+      <div class="flex justify-center gap-3 pt-2">
+        <button onclick="resetActivity(); closeModal();" class="touch-target px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-md transition-colors flex items-center gap-2">
+          <span>🔄</span> Reintentar Actividad
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    /* ===================================================================
+       1. DATA DEFINITIONS (STORY GRAMMAR - 9 ELEMENTS)
+       =================================================================== */
+    const STORY_DATA = [
+      {
+        id: 1,
+        category: "Evento / Tarea",
+        text: "Ana limpia el plato después de comer",
+        hint: "Pista: El evento responde a ¿Qué acción principal realiza Ana en la historia?",
+        highlightId: "p-main"
+      },
+      {
+        id: 2,
+        category: "Personas",
+        text: "Ana",
+        hint: "Pista: Personas responde a ¿Quién es el personaje principal de la historia?",
+        highlightId: "p-main"
+      },
+      {
+        id: 3,
+        category: "Lugar",
+        text: "La cocina (el fregadero)",
+        hint: "Pista: El Lugar responde a ¿Dónde ocurre la historia?",
+        highlightId: "p-step1"
+      },
+      {
+        id: 4,
+        category: "Tiempo",
+        text: "Después de comer",
+        hint: "Pista: El Tiempo responde a ¿Cuándo limpia Ana el plato?",
+        highlightId: "p-main"
+      },
+      {
+        id: 5,
+        category: "Primer Detalle (Paso 1)",
+        text: "Ana lleva el plato hacia el fregadero de la cocina",
+        hint: "Pista: Es el primer paso que hace Ana antes de usar el jabón.",
+        highlightId: "p-step1"
+      },
+      {
+        id: 6,
+        category: "Segundo Detalle (Paso 2)",
+        text: "Ana pone jabón líquido sobre la esponja amarilla",
+        hint: "Pista: Es el segundo paso, lo que pone Ana en la esponja.",
+        highlightId: "p-step2"
+      },
+      {
+        id: 7,
+        category: "Tercer Detalle (Paso 3)",
+        text: "Ana frota la esponja sobre el plato sucio",
+        hint: "Pista: Es el tercer paso, la acción de limpiar el plato con la esponja.",
+        highlightId: "p-step3"
+      },
+      {
+        id: 8,
+        category: "Secuencia",
+        text: "1º Lleva el plato → 2º Pone jabón → 3º Frota la esponja",
+        hint: "Pista: Muestra el orden de los 3 pasos juntos.",
+        highlightId: "p-step1"
+      },
+      {
+        id: 9,
+        category: "Resultado",
+        text: "El plato está limpio y Ana guarda el plato",
+        hint: "Pista: Es cómo queda el plato al final de la historia.",
+        highlightId: "p-result"
+      }
+    ];
+
+    // State tracking variables
+    let cardsState = [];
+    let slotsState = {}; // slotId -> cardId
+    let helpLevels = {}; // slotId -> level (1, 2, 3, 4)
+    let selectedCardId = null;
+    let synth = window.speechSynthesis;
+
+    /* ===================================================================
+       2. INITIALIZATION & RENDERING
+       =================================================================== */
+    window.onload = function() {
+      initActivity();
+    };
+
+    function initActivity() {
+      // Clone and shuffle cards for the bank
+      cardsState = JSON.parse(JSON.stringify(STORY_DATA));
+      cardsState.sort(() => Math.random() - 0.5);
+
+      slotsState = {};
+      helpLevels = {};
+      STORY_DATA.forEach(item => {
+        slotsState[item.id] = null;
+        helpLevels[item.id] = 1; // Level 1: Independent
+      });
+
+      selectedCardId = null;
+
+      renderCardsBank();
+      renderHistoryMapSlots();
+      updateProgress();
+      announceForScreenReader("Actividad iniciada. Selecciona una tarjeta del banco o usa las pistas si lo necesitas.");
+    }
+
+    function renderCardsBank() {
+      const bankEl = document.getElementById("cards-bank");
+      bankEl.innerHTML = "";
+
+      const remainingCards = cardsState.filter(c => !Object.values(slotsState).includes(c.id));
+      document.getElementById("cards-counter").textContent = `${remainingCards.length} restantes`;
+
+      if (remainingCards.length === 0) {
+        bankEl.innerHTML = `<p class="text-sm font-semibold text-emerald-700 bg-emerald-50 p-3 rounded-lg text-center border border-emerald-200">¡Todas las tarjetas colocada correctamente!</p>`;
+        return;
+      }
+
+      remainingCards.forEach(card => {
+        const isSelected = selectedCardId === card.id;
+        const cardDiv = document.createElement("div");
+        cardDiv.className = `touch-target w-full p-3 bg-white border-2 ${isSelected ? 'card-selected border-blue-600' : 'border-slate-300 hover:border-blue-400'} rounded-xl shadow-sm transition-all cursor-pointer flex items-center justify-between gap-2 group text-left`;
+        cardDiv.setAttribute("draggable", "true");
+        cardDiv.setAttribute("tabindex", "0");
+        cardDiv.setAttribute("role", "button");
+        cardDiv.setAttribute("aria-label", `Tarjeta: ${card.text}. Presiona Enter para seleccionar.`);
+
+        // Drag and Drop events
+        cardDiv.ondragstart = (e) => {
+          e.dataTransfer.setData("text/plain", card.id);
+          selectCard(card.id);
+        };
+
+        // Click / Keyboard selection
+        cardDiv.onclick = () => selectCard(card.id);
+        cardDiv.onkeydown = (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            selectCard(card.id);
+          }
+        };
+
+        cardDiv.innerHTML = `
+          <div class="flex-1">
+            <p class="text-sm font-bold text-slate-800">${card.text}</p>
+          </div>
+          <button onclick="event.stopPropagation(); speakText('${escapeQuotes(card.text)}')" 
+                  class="touch-target p-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                  title="Escuchar texto" aria-label="Escuchar texto de la tarjeta: ${card.text}">
+            🔊
+          </button>
+        `;
+
+        bankEl.appendChild(cardDiv);
+      });
+    }
+
+    function renderHistoryMapSlots() {
+      const gridEl = document.getElementById("history-map-grid");
+      gridEl.innerHTML = "";
+
+      STORY_DATA.forEach(slot => {
+        const placedCardId = slotsState[slot.id];
+        const placedCard = STORY_DATA.find(c => c.id === placedCardId);
+        const currentHelp = helpLevels[slot.id];
+
+        const slotDiv = document.createElement("div");
+        
+        let borderClass = "border-slate-300 bg-slate-50";
+        if (placedCard) {
+          borderClass = "border-emerald-500 bg-emerald-50/50";
+        } else if (currentHelp >= 3) {
+          borderClass = "slot-highlight border-yellow-500 bg-yellow-50";
+        }
+
+        slotDiv.className = `border-2 ${borderClass} rounded-xl p-3 flex flex-col justify-between transition-all min-h-[140px] relative`;
+        slotDiv.setAttribute("role", "region");
+        slotDiv.setAttribute("aria-label", `Casillero ${slot.category}`);
+
+        // Drag and drop target events
+        slotDiv.ondragover = (e) => e.preventDefault();
+        slotDiv.ondrop = (e) => {
+          e.preventDefault();
+          const cardId = parseInt(e.dataTransfer.getData("text/plain"));
+          tryPlaceCard(cardId, slot.id);
+        };
+
+        // Slot HTML content
+        let contentHTML = `
+          <div>
+            <div class="flex items-center justify-between border-b border-slate-200 pb-1 mb-2">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-600">${slot.category}</span>
+              ${placedCard ? '<span class="text-emerald-600 font-bold text-xs flex items-center gap-1">✓ Correcto</span>' : ''}
+            </div>
+        `;
+
+        if (placedCard) {
+          contentHTML += `
+            <p class="text-sm font-bold text-slate-900 mb-2">${placedCard.text}</p>
+          `;
+        } else {
+          contentHTML += `
+            <button onclick="handleSlotClick(${slot.id})" 
+                    class="touch-target w-full py-2 px-3 border-2 border-dashed border-slate-300 hover:border-blue-500 hover:bg-blue-50 rounded-lg text-slate-500 text-xs font-semibold transition-colors text-center mb-2"
+                    aria-label="Casillero vacío para ${slot.category}. Haz clic para colocar la tarjeta seleccionada.">
+              ${selectedCardId ? "👉 Colocar aquí tarjeta seleccionada" : "Arrastra o selecciona tarjeta aquí"}
+            </button>
+          `;
+        }
+
+        contentHTML += `</div>`;
+
+        // Hint Display Area (Least-to-Most Help Hierarchy)
+        if (!placedCard) {
+          let hintBox = "";
+          if (currentHelp === 2) {
+            hintBox = `<div class="text-xs bg-amber-50 border border-amber-200 text-amber-800 p-2 rounded mb-2 font-medium">${slot.hint}</div>`;
+          } else if (currentHelp >= 3) {
+            hintBox = `<div class="text-xs bg-yellow-100 border border-yellow-300 text-yellow-900 p-2 rounded mb-2 font-bold animate-pulse">${slot.hint} (Resaltado activo)</div>`;
+          }
+
+          contentHTML += `
+            <div class="mt-auto pt-2 border-t border-slate-200/60 flex flex-col gap-1">
+              ${hintBox}
+              <button onclick="requestHelp(${slot.id})" 
+                      class="touch-target px-2 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold rounded-lg transition-colors flex items-center justify-center gap-1.5 w-full"
+                      aria-label="Pedir ayuda para ${slot.category}. Nivel actual ${currentHelp}">
+                <span>💡</span> Pedir Ayuda ${currentHelp > 1 ? `(Nivel ${currentHelp}/3)` : ''}
+              </button>
+            </div>
+          `;
+        } else {
+          // Speak placed card button
+          contentHTML += `
+            <div class="mt-auto pt-2 flex justify-end">
+              <button onclick="speakText('${escapeQuotes(placedCard.text)}')" class="touch-target text-xs text-slate-500 hover:text-blue-600 px-2 py-1 rounded">
+                🔊 Escuchar
+              </button>
+            </div>
+          `;
+        }
+
+        slotDiv.innerHTML = contentHTML;
+        gridEl.appendChild(slotDiv);
+      });
+    }
+
+    /* ===================================================================
+       3. INTERACTION & CARD PLACEMENT LOGIC
+       =================================================================== */
+    function selectCard(cardId) {
+      if (selectedCardId === cardId) {
+        selectedCardId = null; // Toggle selection off
+      } else {
+        selectedCardId = cardId;
+        const card = STORY_DATA.find(c => c.id === cardId);
+        speakText(`Tarjeta seleccionada: ${card.text}`);
+        announceForScreenReader(`Tarjeta seleccionada: ${card.text}. Ahora elige un casillero.`);
+      }
+      renderCardsBank();
+      renderHistoryMapSlots();
+    }
+
+    function handleSlotClick(slotId) {
+      if (!selectedCardId) {
+        announceForScreenReader("Primero selecciona una tarjeta del banco.");
+        return;
+      }
+      tryPlaceCard(selectedCardId, slotId);
+    }
+
+    function tryPlaceCard(cardId, slotId) {
+      if (cardId === slotId) {
+        // CORRECT MATCH
+        slotsState[slotId] = cardId;
+        selectedCardId = null;
+        playFeedbackSound(true);
+        
+        const card = STORY_DATA.find(c => c.id === cardId);
+        speakText(`¡Correcto! ${card.text}`);
+        announceForScreenReader(`¡Correcto! Has colocado ${card.text} en su casillero.`);
+
+        renderCardsBank();
+        renderHistoryMapSlots();
+        updateProgress();
+        checkCompletion();
+      } else {
+        // INCORRECT MATCH
+        playFeedbackSound(false);
+        speakText("Esa tarjeta no va en este casillero. Intenta de nuevo.");
+        announceForScreenReader("Incorrecto. Esa tarjeta no corresponde a este casillero.");
+      }
+    }
+
+    /* ===================================================================
+       4. LEAST-TO-MOST HELP HIERARCHY (4 LEVELS)
+       =================================================================== */
+    function requestHelp(slotId) {
+      const currentLevel = helpLevels[slotId];
+      const slot = STORY_DATA.find(s => s.id === slotId);
+
+      if (currentLevel === 1) {
+        // LEVEL 2: Written & Audible Hint
+        helpLevels[slotId] = 2;
+        speakText(slot.hint);
+        announceForScreenReader(slot.hint);
+      } else if (currentLevel === 2) {
+        // LEVEL 3: Visual Highlight (Yellow Pulse) + Story Text Signaling
+        helpLevels[slotId] = 3;
+        highlightStoryText(slot.highlightId);
+        speakText(`Resaltando ayuda visual. ${slot.hint}`);
+        announceForScreenReader("Se ha resaltado la casilla y el texto del cuento.");
+      } else if (currentLevel >= 3) {
+        // LEVEL 4: Direct Modeling (Auto-place card)
+        helpLevels[slotId] = 4;
+        slotsState[slotId] = slotId; // Auto complete
+        
+        // Remove from selected if it was selected
+        if (selectedCardId === slotId) selectedCardId = null;
+
+        playFeedbackSound(true);
+        speakText(`Modelado automático: ${slot.category} es ${slot.text}`);
+        announceForScreenReader(`Modelado completado. Se ha colocado automáticamente: ${slot.text}`);
+
+        renderCardsBank();
+        updateProgress();
+        checkCompletion();
+      }
+
+      renderHistoryMapSlots();
+    }
+
+    function highlightStoryText(elementId) {
+      if (!elementId) return;
+      const el = document.getElementById(elementId);
+      if (el) {
+        el.classList.add("bg-yellow-200", "font-bold");
+        setTimeout(() => {
+          el.classList.remove("bg-yellow-200", "font-bold");
+        }, 4000);
+      }
+    }
+
+    /* ===================================================================
+       5. SPEECH SYNTHESIS (WEB SPEECH API) - AUDIO SUPPORT
+       =================================================================== */
+    function speakText(text) {
+      if (!synth) return;
+      synth.cancel(); // Stop ongoing speech
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "es-ES";
+      utterance.rate = 0.9; // Slightly slower for clarity & dyslexia support
+      utterance.pitch = 1.0;
+
+      synth.speak(utterance);
+    }
+
+    function readFullStory() {
+      const fullText = "Ana limpia el plato después de comer. Primero: Ana lleva el plato hacia el fregadero de la cocina. Segundo: Ana pone jabón líquido sobre la esponja amarilla. Tercero: Ana frota la esponja sobre el plato sucio. Resultado: El plato está limpio y Ana guarda el plato.";
+      speakText(fullText);
+      announceForScreenReader("Leyendo todo el cuento adaptado.");
+    }
+
+    /* ===================================================================
+       6. AUDIO FEEDBACK (WEB AUDIO API - NO EXTERNAL FILES)
+       =================================================================== */
+    function playFeedbackSound(isSuccess) {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        if (isSuccess) {
+          // Soft cheerful tone
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(440, ctx.currentTime); // A4
+          osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.2); // A5
+          gain.gain.setValueAtTime(0.15, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.3);
+        } else {
+          // Soft low error tone
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(220, ctx.currentTime); // A3
+          osc.frequency.setValueAtTime(180, ctx.currentTime + 0.1);
+          gain.gain.setValueAtTime(0.1, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.25);
+          osc.start();
+          osc.stop(ctx.currentTime + 0.25);
+        }
+      } catch (e) {
+        // Fallback gracefully if Web Audio API is restricted
+      }
+    }
+
+    /* ===================================================================
+       7. PROGRESS TRACKING & SUMMARY PANEL
+       =================================================================== */
+    function updateProgress() {
+      const completedCount = Object.values(slotsState).filter(val => val !== null).length;
+      document.getElementById("progress-text").textContent = `${completedCount}/9`;
+    }
+
+    function checkCompletion() {
+      const completedCount = Object.values(slotsState).filter(val => val !== null).length;
+      if (completedCount === 9) {
+        setTimeout(() => {
+          showSummaryModal();
+        }, 600);
+      }
+    }
+
+    function showSummaryModal() {
+      let independentCount = 0;
+      let assistedCount = 0;
+
+      Object.keys(slotsState).forEach(slotId => {
+        if (helpLevels[slotId] === 1) {
+          independentCount++;
+        } else {
+          assistedCount++;
+        }
+      });
+
+      document.getElementById("stat-independent").textContent = `${independentCount} de 9`;
+      document.getElementById("stat-assisted").textContent = `${assistedCount} de 9`;
+
+      const modal = document.getElementById("modal-summary");
+      modal.classList.remove("hidden");
+      speakText(`¡Felicidades! Has completado toda la actividad. Respondiste ${independentCount} casilleros de forma independiente y ${assistedCount} con pistas o ayudas.`);
+    }
+
+    function closeModal() {
+      document.getElementById("modal-summary").classList.add("hidden");
+    }
+
+    function resetActivity() {
+      if (synth) synth.cancel();
+      initActivity();
+      speakText("Actividad reiniciada.");
+    }
+
+    /* Helper utilities */
+    function announceForScreenReader(message) {
+      const announcer = document.getElementById("screen-reader-announcer");
+      if (announcer) {
+        announcer.textContent = message;
+      }
+    }
+
+    function escapeQuotes(str) {
+      return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    }
+  </script>
+</body>
+</html>
